@@ -1,0 +1,74 @@
+{
+  "variables": {},
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "guest_os_type": "Ubuntu_64",
+      "iso_url": "http://www.cdimage.ubuntu.com/ubuntu/releases/18.04/release/ubuntu-18.04.1-server-amd64.iso",
+      "iso_checksum": "a5b0ea5918f850124f3d72ef4b85bda82f0fcd02ec721be19c1a6952791c8ee8",
+      "iso_checksum_type": "sha256",
+      "vm_name": "ubuntu_18.04_dvwa",
+      "disk_size": 10000,
+      "headless": "true",
+      "http_directory": "preseed",
+      "boot_command": [
+        "<esc><wait>",
+	"<esc><wait>",
+	"<enter><wait>",
+	"/install/vmlinuz<wait>",
+	" auto<wait>",
+	" console-setup/ask_detect=false<wait>",
+	" console-setup/layoutcode-us<wait>",
+	" console-setup/modelcode=pc105<wait>",
+	" debconf/frontend=noninteractive<wait>",
+	" debian-installer=en_US<wait>",
+        " fb=false<wait>",
+	" initrd=/install/initrd.gz<wait>",
+	" kbd-chooser/method=us<wait>",
+	" keyboard-configuration/layout=USA<wait>",
+	" keyboard-configuration/variant=USA<wait>",
+	" locale=en_US<wait>",
+	" netcfg/get_domain=vm<wait>",
+	" netcfg/get_hostname=dvwa<wait>",
+	" grub-installer/bootdev=/dev/sda<wait>",
+	" noapic<wait>",
+	" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
+	" -- <wait>",
+	"<enter><wait>"
+      ],
+      "ssh_username": "dvwa",
+      "ssh_password": "p@ssw0rd",
+      "ssh_wait_timeout": "10000s",
+      "ssh_pty": "true",
+      "shutdown_command": "sudo poweroff",
+      "vboxmanage": [
+        ["modifyvm", "ubuntu_18.04_dvwa", "--memory", "2048"]
+      ],
+      "format": "ova",
+      "post_shutdown_delay": "180s"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "chef-solo",
+      "install_command": "curl -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -v 14.8.12",
+      "cookbook_paths": ["berks-cookbooks"],
+      "run_list": [ "recipe[dvwa::dvwa_app]" ]
+    },
+    {
+      "type": "shell",
+      "inline": ["sudo dpkg -P chef"] 
+    },
+    {
+      "type": "shell",
+      "inline":  ["sudo rm -rf /tmp/packer-chef-solo"]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "manifest",
+      "output": "manifest.vbox",
+      "strip_path": true
+    }
+  ]
+}

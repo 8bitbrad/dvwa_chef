@@ -1,25 +1,26 @@
 ---
 driver:
   name: vagrant
+  network:
+    - ["forwarded_port", {guest: 80, host: 8888}]
+  customize:
+    memory: 1024
+  require_chef_omnibus: 14.5.33
 
 provisioner:
   name: chef_zero
-  # You may wish to disable always updating cookbooks in CI or other testing environments.
-  # For example:
-  #   always_update_cookbooks: <%= !ENV['CI'] %>
   always_update_cookbooks: true
 
 verifier:
   name: inspec
 
 platforms:
-  - name: ubuntu-16.04
-  - name: centos-7
+  - name: ubuntu-18.04
 
 suites:
   - name: default
     run_list:
-      - recipe[dvwa::default]
+      - recipe[dvwa::dvwa_app]
     verifier:
       inspec_tests:
         - test/integration/default

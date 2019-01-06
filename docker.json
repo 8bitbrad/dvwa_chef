@@ -1,0 +1,60 @@
+{
+  "variables": {},
+  "builders": [
+    {
+      "type": "docker",
+      "image": "phusion/baseimage:0.11",
+      "run_command": ["-d", "--cap-add=SYS_PTRACE", "-i", "-t", "{{.Image}}", "/bin/bash"],
+      "commit": true
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": ["printf '#!/bin/sh\nexit 0\n' > /usr/sbin/policy-rc.d"]
+    },
+    {
+      "type": "shell",
+      "inline": ["apt-get update && apt-get -y install curl sudo gpg"]
+    },
+    {
+      "type": "chef-solo",
+      "install_command": "curl -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -v 14.8.12",
+      "cookbook_paths": ["berks-cookbooks"],
+      "run_list": [ "recipe[dvwa::dvwa_app]" ]
+    },
+    {
+      "type": "shell",
+      "inline": ["sudo dpkg -P chef"] 
+    },
+    {
+      "type": "shell",
+      "inline":  ["rm -rf /tmp/packer-chef-solo"]
+    },
+    {
+      "type": "shell",
+      "inline": ["mkdir /etc/service/mysql && printf '#!/bin/bash\nexec /sbin/setuser mysql /usr/bin/mysqld_safe\n' > /etc/service/mysql/run && chmod +x /etc/service/mysql/run"]
+    },
+    {
+      "type": "shell",
+      "inline": ["mkdir /etc/service/php-fpm && printf '#!/bin/bash\nexec /sbin/setuser www-data /usr/sbin/php-fpm7.2 --nodaemonize\n' > /etc/service/php-fpm/run && chmod +x /etc/service/php-fpm/run && sed -i 's#/var/log/php7.2-fpm.log#/var/log/nginx/php7.2-fpm.log#' /etc/php/7.2/fpm/php-fpm.conf"]
+    },
+    {
+      "type": "shell",
+      "inline": ["chown www-data:www-data /var/log/nginx && rm -f /var/log/nginx/* && mkdir /var/run/nginx && chown www-data:www-data /var/run/nginx && sed -i 's#/var/run/nginx.pid#/var/run/nginx/nginx.pid#' /etc/nginx/nginx.conf && mkdir /etc/service/nginx && printf '#!/bin/sh\nexec /sbin/setuser www-data /usr/sbin/nginx -g \"daemon off;\"' > /etc/service/nginx/run && chmod +x /etc/service/nginx/run"]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "manifest",
+      "output": "manifest.docker",
+      "strip_path": true
+    },
+    {
+      "type": "docker-tag",
+      "repository": "8bitbrad/dvwa",
+      "tag": "0.1"
+    }
+  ]
+}
+

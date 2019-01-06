@@ -80,6 +80,7 @@ Rakefile
 #############
 Berksfile
 Berksfile.lock
+berks-cookbooks/*
 cookbooks/*
 tmp
 
@@ -102,3 +103,11 @@ TESTING*
 ###########
 .vagrant
 Vagrantfile
+
+# Packer #
+##########
+packer_cache/*
+output-virtualbox-iso/*
+preseed/*
+vbox.json
+manifest.vbox

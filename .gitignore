@@ -18,5 +18,11 @@ bin/*
 
 # Chef
 Berksfile.lock
+berks-cookbooks/
 .zero-knife.rb
 Policyfile.lock.json
+
+# Packer
+manifest.vbox
+output-virtualbox-iso/
+packer_cache/
