@@ -19,7 +19,7 @@
     },
     {
       "type": "chef-solo",
-      "install_command": "curl -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -v 14.8.12",
+      "install_command": "curl -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -v 14.13.11",
       "cookbook_paths": ["berks-cookbooks"],
       "run_list": [ "recipe[dvwa::dvwa_app]" ]
     },

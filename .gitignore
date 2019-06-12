@@ -23,6 +23,6 @@ berks-cookbooks/
 Policyfile.lock.json
 
 # Packer
-manifest.vbox
+manifest.*
 output-virtualbox-iso/
 packer_cache/
