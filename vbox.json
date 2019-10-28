@@ -4,8 +4,8 @@
     {
       "type": "virtualbox-iso",
       "guest_os_type": "Ubuntu_64",
-      "iso_url": "http://www.cdimage.ubuntu.com/ubuntu/releases/18.04/release/ubuntu-18.04.2-server-amd64.iso",
-      "iso_checksum": "a2cb36dc010d98ad9253ea5ad5a07fd6b409e3412c48f1860536970b073c98f5",
+      "iso_url": "http://www.cdimage.ubuntu.com/ubuntu/releases/18.04/release/ubuntu-18.04.3-server-amd64.iso",
+      "iso_checksum": "7d8e0055d663bffa27c1718685085626cb59346e7626ba3d3f476322271f573e",
       "iso_checksum_type": "sha256",
       "vm_name": "ubuntu_18.04_dvwa",
       "disk_size": 10000,
@@ -51,13 +51,14 @@
   "provisioners": [
     {
       "type": "chef-solo",
-      "install_command": "curl -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -v 14.13.11",
+      "chef_license": "accept",
+      "install_command": "curl -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -v 15.4.45",
       "cookbook_paths": ["berks-cookbooks"],
       "run_list": [ "recipe[dvwa::dvwa_app]" ]
     },
     {
       "type": "shell",
-      "inline": ["sudo dpkg -P chef"] 
+      "inline": ["sudo dpkg -P chef"]
     },
     {
       "type": "shell",

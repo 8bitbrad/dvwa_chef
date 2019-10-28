@@ -15,4 +15,3 @@ end
 execute 'create_dvwa_user' do
   command 'mysql -e "grant all on dvwa.* to dvwa@localhost identified by \"p@ssw0rd\""'
 end
-

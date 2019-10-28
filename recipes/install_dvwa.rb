@@ -3,13 +3,13 @@
 # Recipe:: install_dvwa
 #
 
-remote_file '/tmp/dvwa.zip' do
+remote_file "#{Chef::Config[:file_cache_path]}/dvwa.zip" do
   source 'https://github.com/ethicalhack3r/DVWA/archive/master.zip'
   action :create
 end
 
 execute 'unzip_dvwa_archive' do
-  command 'unzip /tmp/dvwa.zip'
+  command "cp #{Chef::Config[:file_cache_path]}/dvwa.zip /tmp && unzip /tmp/dvwa.zip"
   cwd '/tmp'
   not_if { ::Dir.exist?('/tmp/DVWA-master') }
 end
@@ -37,7 +37,7 @@ cookbook_file '/etc/php/7.2/fpm/php.ini' do
   group 'root'
   mode '0644'
   action :create
-  # notifies :reload, 'service[php7.2-fpm]', :delayed
+  notifies :reload, 'service[php7.2-fpm]', :delayed
 end
 
 service 'php7.2-fpm' do
