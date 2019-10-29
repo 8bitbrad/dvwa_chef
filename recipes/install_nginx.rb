@@ -14,7 +14,7 @@ nginx_site 'dvwa' do
   cookbook 'dvwa'
   template 'dvwa.erb'
   action :enable
-  notifies :reload, 'service[nginx]', :delayed
+  # notifies :reload, 'service[nginx]', :delayed
 end
 
 service 'nginx' do

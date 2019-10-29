@@ -37,7 +37,7 @@ cookbook_file '/etc/php/7.2/fpm/php.ini' do
   group 'root'
   mode '0644'
   action :create
-  notifies :reload, 'service[php7.2-fpm]', :delayed
+  # notifies :reload, 'service[php7.2-fpm]', :delayed
 end
 
 service 'php7.2-fpm' do
