@@ -15,7 +15,7 @@
     },
     {
       "type": "shell",
-      "inline": ["apt-get update && apt-get -y install curl sudo gpg"]
+      "inline": ["apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install curl sudo gpg"]
     },
     {
       "type": "chef-solo",
