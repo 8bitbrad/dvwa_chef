@@ -3,7 +3,7 @@
   "builders": [
     {
       "type": "docker",
-      "image": "phusion/baseimage:0.11",
+      "image": "phusion/baseimage:master-amd64",
       "run_command": ["-d", "--cap-add=SYS_PTRACE", "-i", "-t", "{{.Image}}", "/bin/bash"],
       "commit": true
     }
@@ -42,7 +42,7 @@
     },
     {
       "type": "shell",
-      "inline": ["chown www-data:www-data /var/log/nginx && rm -f /var/log/nginx/* && mkdir /var/run/nginx && chown www-data:www-data /var/run/nginx && sed -i 's#/var/run/nginx.pid#/var/run/nginx/nginx.pid#' /etc/nginx/nginx.conf && mkdir /etc/service/nginx && printf '#!/bin/sh\nexec /sbin/setuser www-data /usr/sbin/nginx -g \"daemon off;\"' > /etc/service/nginx/run && chmod +x /etc/service/nginx/run"]
+      "inline": ["chown www-data:www-data /var/log/nginx && rm -f /run/nginx.pid && rm -f /var/log/nginx/* && mkdir /var/run/nginx && chown www-data:www-data /var/run/nginx && sed -i 's#/run/nginx.pid#/var/run/nginx/nginx.pid#' /etc/nginx/nginx.conf && mkdir /etc/service/nginx && printf '#!/bin/sh\nexec /sbin/setuser www-data /usr/sbin/nginx -g \"daemon off;\"' > /etc/service/nginx/run && chmod +x /etc/service/nginx/run"]
     }
   ],
   "post-processors": [
